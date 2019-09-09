@@ -1,0 +1,11 @@
+{
+  "name": "Whatsup",
+  "short_name": "Whatsup",
+  "theme_color": "#116466",
+  "background_color": "#116466",
+  "display": "standalone",
+  "Scope": "/",
+  "start_url": "/",
+  "description": "WhatsUp allows you to create channels based on a topic and start a discussion with people all around the world!",
+  "lang": "en-US"
+}

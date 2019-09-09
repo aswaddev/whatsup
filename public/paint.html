@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="msapplication-starturl" content="/" />
+    <link rel="shortcut icon" href="/images/chat-logo.png" type="image/png" />
+    <meta name="theme-color" content="#116466" />
+    <link rel="manifest" href="/manifest.json" />
+    <script async src="/pwacompat/pwacompat.min.js"></script>
+    <link rel="stylesheet" href="/components/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link rel="stylesheet" href="/stylesheets/paint.css" />
+    <title>WhatsUp</title>
+  </head>
+  <body>
+    <div id="workspace">
+      <small id="typing-status"></small>
+      <canvas id="draw" width="900px" height="650px"></canvas>
+      <div id="toolbar">
+        <a href="/" id="back-link">
+          <i class="fas fa-arrow-circle-left"></i>
+          Go Back
+        </a>
+        <div id="colors">
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div class="color"></div>
+          <div id="random-btn">?</div>
+          <div id="eraser" data-color="#ffffff">
+            <i class="fas fa-eraser"></i>
+          </div>
+        </div>
+        <div id="brush-input">
+          <div id="brush-sizes">
+            <div class="size" id="size-1" data-size="3"></div>
+            <div class="size" id="size-2" data-size="5"></div>
+            <div class="size" id="size-3" data-size="7"></div>
+            <div class="size" id="size-4" data-size="9"></div>
+            <div class="size" id="size-5" data-size="11"></div>
+            <div class="size" id="size-6" data-size="13"></div>
+            <div class="size" id="size-7" data-size="15"></div>
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="brush-color">Select Brush Color:</label>
+          <input type="color" id="brush-color" value="#000000" />
+        </div>
+        <div class="input-group">
+          <label for="canvas-color">Select Canvas Color:</label>
+          <input type="color" id="canvas-color" value="#ffffff" />
+        </div>
+        <div class="btn-group">
+          <button type="button" id="save-btn">
+            SAVE
+          </button>
+          <button type="reset" id="reset-btn">
+            RESET
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="/socket.io-client/dist/socket.io.js"></script>
+    <script src="/javascript/cookies.js"></script>
+    <script src="/javascript/canvas.js"></script>
+  </body>
+</html>

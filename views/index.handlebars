@@ -1,0 +1,230 @@
+<div class="container">
+    <div class="left-panel">
+        <div class="control-bar">
+            <div class="top">
+                <div class="avatar">
+                    <a href="/">
+                        <i class="fas fa-comments"></i>
+                        <h3 id="branding">WhatsUp</h3>
+                    </a>
+                </div>
+                <div class="options">
+                    <i class="fas fa-ellipsis-v" id="dropdown-button" data-action="dropdown-open"
+                        data-targetid="main-dropdown"></i>
+                    <ul class="dropdown-menu" id="main-dropdown">
+                        <li class="username">
+                            Hi, {{getFirstName user}}
+                        </li>
+                        <li id="new-channel" data-action="modal-open" data-modalId="create-channel">New Channel</li>
+                        <li><a href="/channel/paint">Paint Room</a></li>
+                        <li id="logout">Logout</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bottom">
+                <div class="input-group">
+                    <label for="search"><i class="fas fa-search"></i></label>
+                    <input type="text" name="search" id="search" placeholder="Search or start new chat"
+                        autocomplete="off">
+                </div>
+            </div>
+        </div>
+        <ul id="channels">
+            {{#each channels}}
+            <li>
+                <a href="/channel/{{_id}}" class="channel {{#if (isEqual ../channel.id id)}} active-channel {{/if}}"
+                    id="{{_id}}">
+                    <div class="avatar" style="background-image: url('/images/{{image}}');">
+                    </div>
+                    <div class="body">
+                        <div class="left">
+                            <h6 class="channel-title">
+                                {{title}}
+                            </h6>
+                            <small class="last-message">
+                                {{#if (isEmpty messages)}}
+                                {{description}}
+                                {{else}}
+                                {{#each messages}}
+                                {{#if @last}}
+                                {{#if (isVoicemoji this.type)}}
+                                <i class="fas fa-headphones" style="font-size: 14px;margin-right:5px;"></i>
+                                {{this.message}}
+                                {{else}}
+                                {{this.message}}
+                                {{/if}}
+                                {{/if}}
+                                {{/each}}
+                                {{/if}}
+                            </small>
+                        </div>
+                        <div class="right">
+                            <small>
+                                {{ formatDate date_created }}
+                            </small>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+    <div class="right-panel">
+        {{#if id}}
+        <div id="chat-box">
+            <div class="blur-bg"></div>
+            <div id="chat-title">
+                <div class="left">
+                    <div class="avatar" style="background-image: url('/images/{{channel.image}}');"></div>
+                    <h4>{{channel.title}}</h4>
+                </div>
+                <div class="right">
+                    <i class="fas fa-volume-mute" id="allow-autoplay"></i>
+                    <i class="far fa-play-circle" id="dropdown-music-button" data-action="dropdown-open"
+                        data-targetid="voicemoji-dropdown"></i>
+                    <ul class="dropdown-menu" id="voicemoji-dropdown">
+                        <li id="new-voicemoji" data-action="modal-open" data-modalId="upload-voicemoji">
+                            <i class="fas fa-upload"></i> &nbsp; Upload Voicemoji
+                        </li>
+                        {{#each voicemojis}}
+                        <li class="sounds voicemoji" data-id="{{_id}}" data-name="{{name}}"
+                            data-url="/sounds/{{filename}}">{{name}}</li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+            <div id="chat-messages">
+                <ul>
+                    <li id="no-messages">
+                        {{channel.description}}
+                    </li>
+                    {{#each channel.messages}}
+                    {{#if (isVoicemoji type)}}
+                    <li class="{{#if (isEqual ../user sender)}} sender {{else}} other {{/if}} player-container">
+                        {{#unless (isEqual ../user sender )}}
+                        <span class="node"></span>
+                        {{/unless}}
+                        <div class="player">
+                            <div class="top">
+                                <i class="far fa-play-circle play-voicemoji" data-src="{{filename}}"></i>
+                                <span>{{message}}</span>
+                            </div>
+                            <div class="bottom">
+                                <div class="data">
+                                    <div class="name">
+                                        <small>{{sender}}</small>
+                                    </div>
+                                    <div class="date">
+                                        <small>{{{formatDateTime date}}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{#if (isEqual ../user sender)}}
+                        <span class="node"></span>
+                        {{/if}}
+                    </li>
+
+                    {{else}}
+                    <li class="{{#if (isEqual ../user sender)}} sender {{else}} other {{/if}}">
+                        {{#unless (isEqual ../user sender )}}
+                        <span class="node"></span>
+                        {{/unless}}
+                        <div class="body">
+                            {{message}}
+                            <div class="data">
+                                <div class="name">
+                                    <small>{{sender}}</small>
+                                </div>
+                                <div class="date">
+                                    <small>{{{formatDateTime date}}}</small>
+                                </div>
+                            </div>
+                        </div>
+                        {{#if (isEqual ../user sender)}}
+                        <span class="node"></span>
+                        {{/if}}
+                    </li>
+                    {{/if}}
+                    {{/each}}
+                </ul>
+                <small id="typing-status"></small>
+            </div>
+            <form action="#" method="post" id="message-form">
+                <div class="input-group">
+                    <input type="text" id="message-field" placeholder="Enter a text message..." autocomplete="off"
+                        data-emojiable="true" data-emoji-input="unicode" name="message">
+                    <button type="submit">
+                        <i class="far fa-paper-plane"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+        {{else}}
+        <div id="hero">
+            <img src="/images/chat-logo.png">
+            <h1>Getting Connected</h1>
+            <h5>WhatsUp allows you to create channels based on a topic and start a discussion with people all around the
+                world!
+            </h5>
+        </div>
+        {{/if}}
+    </div>
+    {{#if id}}
+    <i class="fas fa-bars" id="menu-icon"></i>
+    {{else}}
+    <i class="fas fa-bars" id="menu-icon" style="color:#333;"></i>
+    {{/if}}
+    <audio id="notification" src="/sounds/notification.mp3" type="audio/mp3" muted="true"></audio>
+    {{!-- {{#each voicemojis}}
+    <audio data-id="{{_id}}" src="/sounds/{{filename}}" type="audio/{{getExtName filename}}"
+        style="display:none;"></audio>
+    {{/each}} --}}
+    <div id="create-channel" class="modal close">
+        <form id="channel-form" action="/create-channel" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="channel-name">Channel Name:</label>
+                <input type="text" placeholder="Enter Channel Name Here" id="channel-name" name="name">
+            </div>
+            <div class="form-group">
+                <label for="channel-description">Channel Description:</label>
+                <input type="text" id="channel-description" name="description"
+                    placeholder="Enter Channel Description Here">
+            </div>
+            <div class="form-group">
+                <label for="channel-image">Channel Image:</label>
+                <input type="file" id="channel-image" name="image">
+            </div>
+            <h3 class="feedback-message success-message"></h3>
+            <button type="submit">Create Channel</button>
+        </form>
+        <i class="fas fa-times" data-action="modal-close" data-modalId="create-channel"></i>
+    </div>
+    <div id="upload-voicemoji" class="modal close">
+        <form id="voicemoji-form" action="/upload-voicemoji" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="voicemoji-name">Voicemoji Name:</label>
+                <input type="text" placeholder="Enter Voicemoji Name Here" id="voicemoji-name" name="name">
+            </div>
+            <div class="form-group">
+                <label for="voicemoji">Voicemoji:</label>
+                <input type="file" id="voicemoji" name="voicemoji">
+            </div>
+            <h3 class="feedback-message success-message"></h3>
+            <button type="submit">Upload Voicemoji</button>
+        </form>
+        <i class="fas fa-times" data-action="modal-close" data-modalId="upload-voicemoji"></i>
+    </div>
+</div>
+<div id="modal-background" class="overlay close"></div>
+{{#if id}}
+<script src="/components/jquery/jquery.min.js"></script>
+<script src="/components/emoji-picker/js/config.js"></script>
+<script src="/components/emoji-picker/js/util.js"></script>
+<script src="/components/emoji-picker/js/jquery.emojiarea.js"></script>
+<script src="/components/emoji-picker/js/emoji-picker.js"></script>
+<script src="/socket.io-client/dist/socket.io.js"></script>
+<script src="/javascript/cookies.js"></script>
+<script src="/javascript/emojify.js"></script>
+<script src="/javascript/sockets.js"></script>
+{{/if}}
