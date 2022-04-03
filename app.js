@@ -29,14 +29,14 @@ app.use(express.urlencoded({ extended: true }));
 var hbs = exphbs.create({
   defaultLayout: 'layout',
   helpers: {
-    excerpt: data => data.slice(0, 50) + '...',
-    formatDate: date =>
+    excerpt: (data) => data.slice(0, 50) + '...',
+    formatDate: (date) =>
       date.getDate() +
       '/' +
       (Number(date.getMonth()) + 1) +
       '/' +
       date.getFullYear(),
-    formatDateTime: date => {
+    formatDateTime: (date) => {
       return (
         date.getDate() +
         '/' +
@@ -45,13 +45,13 @@ var hbs = exphbs.create({
         date.getFullYear() // + '</br>' + date.toLocaleTimeString()
       );
     },
-    getFirstName: name => {
+    getFirstName: (name) => {
       return name.split(' ')[0];
     },
-    getExtName: filename => {
+    getExtName: (filename) => {
       return path.extname(filename).replace('.', '');
     },
-    isEmpty: variable => {
+    isEmpty: (variable) => {
       if (variable.length === 0) {
         return true;
       } else {
@@ -65,14 +65,14 @@ var hbs = exphbs.create({
         return false;
       }
     },
-    isVoicemoji: type => {
+    isVoicemoji: (type) => {
       if (type === 'voicemoji') {
         return true;
       } else {
         return false;
       }
-    }
-  }
+    },
+  },
 });
 
 app.engine('handlebars', hbs.engine);
@@ -99,7 +99,7 @@ app.get('/', (req, res) => {
       }
       res.render('index', {
         channels,
-        user: req.cookies.nickname
+        user: req.cookies.nickname,
       });
     });
 });
@@ -130,7 +130,7 @@ app.get('/channel/:id', (req, res) => {
               channels,
               channel: channel[0],
               user: req.cookies.nickname,
-              voicemojis
+              voicemojis,
             });
           });
       });
@@ -138,19 +138,19 @@ app.get('/channel/:id', (req, res) => {
 });
 
 var storage = multer.diskStorage({
-  destination: function(req, file, cb) {
+  destination: function (req, file, cb) {
     if (file.mimetype.split('/')[0] === 'audio') {
       cb(null, path.join(__dirname, 'public', 'sounds'));
     } else if (file.mimetype.split('/')[0] === 'image') {
       cb(null, path.join(__dirname, 'public', 'images'));
     }
   },
-  filename: function(req, file, cb) {
+  filename: function (req, file, cb) {
     cb(
       null,
       file.fieldname + '-' + Date.now() + '.' + file.mimetype.split('/')[1]
     );
-  }
+  },
 });
 
 var upload = multer({ storage: storage });
@@ -160,7 +160,7 @@ app.post('/create-channel', upload.single('image'), (req, res) => {
     creator: req.cookies.nickname,
     title: req.body.name,
     description: req.body.description,
-    image: req.file.filename
+    image: req.file.filename,
   });
   channel.save().then(() => {
     res.send('Channel Created Successfully!');
@@ -170,14 +170,14 @@ app.post('/create-channel', upload.single('image'), (req, res) => {
 app.post('/upload-voicemoji', upload.single('voicemoji'), (req, res) => {
   var voicemoji = new Voicemoji({
     name: req.body.name,
-    filename: req.file.filename
+    filename: req.file.filename,
   });
   voicemoji.save().then(() => {
     res.send('Voicemoji Uploaded Successfully!');
   });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 19001;
 
 http.listen(PORT, () => {
   console.log('Server started on port: ' + address + ':' + PORT);

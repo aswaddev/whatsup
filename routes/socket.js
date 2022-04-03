@@ -1,12 +1,12 @@
 const Channel = require('../models/Channel');
 const ObjectId = require('mongoose').Types.ObjectId;
 
-const socketController = server => {
+const socketController = (server) => {
   const io = require('socket.io')(server);
   var state = null;
   var bgColor = null;
   // Listening to Socket Connections
-  io.on('connection', socket => {
+  io.on('connection', (socket) => {
     console.log('Socket ID Connected: ' + socket.id);
 
     if (
@@ -16,8 +16,9 @@ const socketController = server => {
       var room = socket.handshake['query']['r_var'];
       socket.join(room);
 
-      socket.on('draw', payload => {
+      socket.on('draw', (payload) => {
         state = payload.state;
+        // console.log(state);
         socket.to(room).emit('draw', payload);
       });
 
@@ -25,12 +26,12 @@ const socketController = server => {
         socket.emit('get current state', state, bgColor);
       });
 
-      socket.on('change background', color => {
+      socket.on('change background', (color) => {
         bgColor = color;
         socket.to(room).emit('change background', color);
       });
 
-      socket.on('someone is drawing', nickname => {
+      socket.on('someone is drawing', (nickname) => {
         socket.to(room).emit('someone is drawing', nickname);
       });
 
@@ -55,12 +56,12 @@ const socketController = server => {
         );
       });
 
-      socket.on('voicemoji', payload => {
+      socket.on('voicemoji', (payload) => {
         var voicemoji = {
           sender: payload.sender,
           message: payload.message,
           type: 'voicemoji',
-          filename: payload.filename
+          filename: payload.filename,
         };
         Channel.findByIdAndUpdate(
           room,
@@ -72,7 +73,7 @@ const socketController = server => {
         );
       });
 
-      socket.on('someone is typing', handle => {
+      socket.on('someone is typing', (handle) => {
         socket.to(room).emit('someone is typing', handle);
       });
 
